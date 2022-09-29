@@ -8,8 +8,11 @@ require("@electron/remote/main").initialize();
 
 function createWindow() {
   const window = new BrowserWindow({
+    title: "Diccionario Japonés",
     width: 1000,
     height: 800,
+    minWidth: 1000,
+    minHeight: 800,
     resizable: true,
     maximizable: true,
     center: true,

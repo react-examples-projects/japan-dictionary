@@ -3,17 +3,21 @@ import { FixedSizeList as List } from "react-window";
 import { FiList } from "react-icons/fi";
 import useTranslations from "./hooks/useTranslations";
 import useTooltip from "./hooks/useTooltip";
+import useToggle from "./hooks/useToggle";
 import Translation from "./components/Translation";
+import FavoriteTranslations from "./components/FavoriteTranslations";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 function App() {
+  const [isOpen, toggleOpen] = useToggle();
   const { mouseEnter, mouseLeave, tooltip } = useTooltip();
-  const { onChangeWord, translations, results, data, wordSearch, isLoading } =
-    useTranslations();
+  const { onChangeWord, translations, results, data, wordSearch, isLoading } = useTranslations();
 
   return (
     <main className="container text-center">
       {tooltip}
+      
+      <FavoriteTranslations {...{ isOpen, toggleOpen }} />
 
       <Button
         name="favorite_list"
@@ -22,14 +26,15 @@ function App() {
         data-tip="Ver favoritos"
         className="btn-favs"
         type="success"
-        auto
+        onClick={toggleOpen}
         onMouseEnter={mouseEnter}
         onMouseLeave={mouseLeave}
         iconRight={<FiList />}
+        auto
       />
 
       <div className="banner">
-        <h3>Diccionario Japonés</h3>
+        <h2>Diccionario Japonés</h2>
         <p>
           Busca y encuentra palabras del diccionario japonés con más de 50.000
           palabras usadas, puedes filtrar, guardar y seleccionar palabras
