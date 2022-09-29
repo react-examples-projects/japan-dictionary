@@ -1,9 +1,9 @@
 import { Button, Modal } from "@geist-ui/core";
-import {  FiEye } from "react-icons/fi";
+import { FiEye } from "react-icons/fi";
 import TranslationsButtons from "./TranslationsButtons";
 import useToggle from "../hooks/useToggle";
 
-export default function Translation({ index, key, style, data }) {
+export default function Translation({ index, key, style, data, toggle }) {
   const translation = data[index];
   const [isOpen, toggleOpen] = useToggle();
 
@@ -25,7 +25,7 @@ export default function Translation({ index, key, style, data }) {
           {translation.trans}
         </p>
 
-        <TranslationsButtons translation={translation}>
+        <TranslationsButtons translation={translation} toggle={toggle}>
           <Button
             name="view_more"
             title="Ver más"

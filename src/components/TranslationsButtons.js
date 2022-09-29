@@ -2,18 +2,21 @@ import { Button, useToasts } from "@geist-ui/core";
 import { FiHeart, FiCopy } from "react-icons/fi";
 import { SiGoogletranslate } from "react-icons/si";
 import useFavoriteTranslation from "../hooks/useFavoriteTranslation";
-import useToggle from "../hooks/useToggle";
 import copy from "copy-to-clipboard";
 
 export default function TranslationsButtons({
   translation,
   children,
+  toggle,
   ...props
 }) {
   const { setToast } = useToasts();
-  const [isOpen, toggleOpen] = useToggle();
   const { isFavorite, toggleFavorite } = useFavoriteTranslation(translation);
-
+  const _toggleFavorite = () => {
+    toggleFavorite();
+    toggle?.(translation);
+  };
+  
   const _copy = () => {
     copy(translation.symbol, {
       debug: true,
@@ -76,7 +79,7 @@ export default function TranslationsButtons({
         style={{
           padding: "0 8px",
         }}
-        onClick={toggleFavorite}
+        onClick={_toggleFavorite}
         type="abort"
         auto
       />

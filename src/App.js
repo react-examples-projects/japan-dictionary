@@ -7,17 +7,19 @@ import useToggle from "./hooks/useToggle";
 import Translation from "./components/Translation";
 import FavoriteTranslations from "./components/FavoriteTranslations";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import useFavoriteTranslations from "./hooks/useFavoriteTranslations";
 
 function App() {
   const [isOpen, toggleOpen] = useToggle();
   const { mouseEnter, mouseLeave, tooltip } = useTooltip();
   const { onChangeWord, translations, results, data, wordSearch, isLoading } = useTranslations();
+  const { favoriteTranslations, toggle } = useFavoriteTranslations();
 
   return (
     <main className="container text-center">
       {tooltip}
-      
-      <FavoriteTranslations {...{ isOpen, toggleOpen }} />
+
+      <FavoriteTranslations {...{ isOpen, toggleOpen,favoriteTranslations, toggle }} />
 
       <Button
         name="favorite_list"
@@ -78,7 +80,7 @@ function App() {
           itemSize={60}
           className="mt-5 pe-2 t-list"
         >
-          {(props) => <Translation {...props} data={data} />}
+          {(props) => <Translation {...props} data={data} toggle={toggle}/>}
         </List>
       )}
     </main>

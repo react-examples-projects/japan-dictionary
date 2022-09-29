@@ -17,12 +17,13 @@ export const exitsTranslationInFavorites = (translation) => {
 export const toggleFavoriteTranslation = (translation) => {
   if (exitsTranslationInFavorites(translation)) {
     removeFavoriteTranslation(translation);
-    return false;
+  } else {
+    addFavoriteTranslation(translation);
   }
-  addFavoriteTranslation(translation);
-  return true;
+
+  return getFavoriteTranslations();
 };
- 
+
 export const addFavoriteTranslation = (translation) => {
   const translations = getFavoriteTranslations();
   setFavoriteTranslations([...translations, translation]);

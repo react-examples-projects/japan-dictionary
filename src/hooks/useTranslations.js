@@ -37,11 +37,15 @@ export default function useTranslations() {
           )
         );
       })
-      .map((t) => ({
-        symbol: t.symbol.slice(1, t.symbol.length - 1),
-        trans: t.fullTrans.join(", "),
-        trans2: t.trans.filter(Boolean).join(", "),
-      }));
+      .map((t) => {
+        return {
+          symbol: t.symbol.slice(1, t.symbol.length - 1),
+          trans: Array.isArray(t.fullTrans)
+            ? t.fullTrans.join(", ")
+            : t.fullTrans,
+          trans2: t.trans.filter(Boolean).join(", "),
+        };
+      });
     setResults(_results);
   }, [translations, wordSearch]);
 
@@ -51,6 +55,6 @@ export default function useTranslations() {
     results,
     data,
     wordSearch,
-    isLoading
+    isLoading,
   };
 }
