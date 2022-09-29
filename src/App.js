@@ -1,74 +1,30 @@
 import { Input, Button } from "@geist-ui/core";
-import { useEffect, useState } from "react";
-import { translationsToArray, normalizeText } from "./helpers/utils";
 import { FixedSizeList as List } from "react-window";
 import { FiList } from "react-icons/fi";
-import ReactTooltip from "react-tooltip";
-import useDebounce from "./hooks/useDebounce";
-import nprogress from "nprogress";
+import useTranslations from "./hooks/useTranslations";
+import useTooltip from "./hooks/useTooltip";
 import Translation from "./components/Translation";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 function App() {
-  const [tooltip, showTooltip] = useState(true);
-  const [translations, setTranslations] = useState([]);
-  const [results, setResults] = useState([]);
-  const [word, setWord] = useState("");
-  const wordSearch = normalizeText(useDebounce(word, 800));
-  const data = results.length ? results : translations;
-
-  const onChangeWord = (e) => {
-    const word = e.target.value;
-    setWord(word);
-  };
-
-  useEffect(() => {
-    const _results = translations
-      .filter((ts) => {
-        return (
-          ts.trans.includes(wordSearch) ||
-          ts.trans.some((t) => t === wordSearch) ||
-          ts.trans.some((t) =>
-            t.split(" ").some((t) => t === wordSearch || t.includes(wordSearch))
-          )
-        );
-      })
-      .map((t) => ({
-        symbol: t.symbol.slice(1, t.symbol.length - 1),
-        trans: t.fullTrans,
-        trans2: t.trans.filter(Boolean).join(", "),
-      }));
-    setResults(_results);
-  }, [translations, wordSearch]);
-
-  useEffect(() => {
-    nprogress.start();
-    import("./assets/translations.json").then((json) => {
-      let translations;
-      if (localStorage.getItem("translations")) {
-        translations = JSON.parse(localStorage.getItem("translations"));
-      } else {
-        translations = translationsToArray(json);
-        localStorage.setItem("translations", JSON.stringify(translations));
-      }
-      setTranslations(translations);
-      nprogress.done();
-    });
-  }, []);
+  const { mouseEnter, mouseLeave, tooltip } = useTooltip();
+  const { onChangeWord, translations, results, data, wordSearch, isLoading } =
+    useTranslations();
 
   return (
     <main className="container text-center">
-      {tooltip && <ReactTooltip place="top" type="dark" effect="solid" />}
+      {tooltip}
 
       <Button
+        name="favorite_list"
+        title="Ver favoritos"
+        aria-label="Ver favoritos"
         data-tip="Ver favoritos"
         className="btn-favs"
         type="success"
         auto
-        onMouseEnter={() => showTooltip(true)}
-        onMouseLeave={() => {
-          showTooltip(false);
-          setTimeout(() => showTooltip(true), 50);
-        }}
+        onMouseEnter={mouseEnter}
+        onMouseLeave={mouseLeave}
         iconRight={<FiList />}
       />
 
@@ -104,15 +60,22 @@ function App() {
           Se encontrarón {results.length} concidencias{" "}
         </small>
       )}
-
-      <List
-        height={700}
-        itemCount={results.length || translations.length}
-        itemSize={60}
-        className="mt-5 pe-2 t-list"
-      >
-        {(props) => <Translation {...props} data={data} />}
-      </List>
+      {isLoading ? (
+        <SkeletonTheme baseColor="#202020" highlightColor="#444">
+          <div className="w-100 opacity-gradient mt-5">
+            <Skeleton count={10} height={60} />
+          </div>
+        </SkeletonTheme>
+      ) : (
+        <List
+          height={700}
+          itemCount={results.length || translations.length}
+          itemSize={60}
+          className="mt-5 pe-2 t-list"
+        >
+          {(props) => <Translation {...props} data={data} />}
+        </List>
+      )}
     </main>
   );
 }

@@ -10,7 +10,7 @@ export function translationsToArray(json) {
       return {
         ...o,
         fullTrans: o.trans,
-        trans: o.trans
+        trans: (Array.isArray(o.trans) ? o.trans.toString() : o.trans)
           .split(",")
           .map((t) =>
             normalizeText(t.replace(/\([^()]*\)|\[[^()]*\]/gi, "")).trim()

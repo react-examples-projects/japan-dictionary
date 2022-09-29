@@ -5,6 +5,7 @@ import App from "./App";
 
 import "./styles/index.scss";
 import "./styles/utils.scss";
+import 'react-loading-skeleton/dist/skeleton.css'
 import 'nprogress/nprogress.css';
 import "inter-ui/inter.css";
 

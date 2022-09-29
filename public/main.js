@@ -10,7 +10,7 @@ function createWindow() {
   const window = new BrowserWindow({
     width: 1000,
     height: 800,
-    resizable: false,
+    resizable: true,
     maximizable: true,
     center: true,
     //autoHideMenuBar: true,
